@@ -1,0 +1,22 @@
+{
+	"imports": {
+		"hono": "jsr:@hono/hono@^4.7.11",
+		"zod": "npm:zod@^3.25.67",
+		"google-auto-library": "npm:google-auth-library@9",
+		"path": "jsr:@std/path"
+	},
+	"tasks": {
+		"start": "deno run --allow-net --allow-read --allow-env --env-file main.ts"
+	},
+	"compilerOptions": {
+		"jsx": "precompile",
+		"jsxImportSource": "hono/jsx"
+	},
+	"fmt": {
+		"options": {
+			"singleQuote": true,
+			"indentWidth": 2,
+			"semiColons": false
+		}
+	}
+}
