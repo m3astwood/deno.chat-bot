@@ -14,6 +14,6 @@ export async function writeMembers(members: SpaceMember[]) {
   }
 }
 
-export async function getSavedMembers() {
-  return await KV.get(['members'])
+export function getSavedMembers() {
+  return KV.list({ prefix: ['members'] })
 }
