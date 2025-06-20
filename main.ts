@@ -15,10 +15,10 @@ app.get('/', (c) => {
 app.post('/events', async (c) => {
   try {
     const event = await c.req.json()
-    // console.log(
-    //   'Received Google Chat Event:',
-    //   JSON.stringify(event, null, 2),
-    // )
+    console.log(
+      'Received Google Chat Event:',
+      JSON.stringify(event, null, 2),
+    )
 
     let responseText = 'Hello from your Deno Hono bot!'
 
