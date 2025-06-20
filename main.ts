@@ -24,7 +24,7 @@ app.post('/events', async (c) => {
       if (message.slashCommand) {
         switch (Number(message.slashCommand.commandId)) {
           case Commands.Who:
-            console.log(await whoIs())
+            console.log(await whoIs(message.space.name))
             break
 
           default:
