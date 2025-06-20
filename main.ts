@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import Client from './lib/auth.ts'
+import { EventType } from './types/Events.ts'
 
 const app = new Hono()
 const client = Client
@@ -14,15 +15,24 @@ app.get('/', (c) => {
 app.post('/events', async (c) => {
   try {
     const event = await c.req.json()
-    console.log(
-      'Received Google Chat Event:',
-      JSON.stringify(event, null, 2),
-    )
+    // console.log(
+    //   'Received Google Chat Event:',
+    //   JSON.stringify(event, null, 2),
+    // )
 
     let responseText = 'Hello from your Deno Hono bot!'
 
-    if (event.type === 'MESSAGE') {
+    if (event.type === EventType.Message) {
       const message = event.message
+
+      if (message.annotations.slashCommand) {
+        console.log(
+          'SlashCommand',
+          JSON.stringify(message.annotations.slashCommand, null, 2),
+        )
+        responseText = `You requested a command...`
+      }
+
       if (message.text) {
         responseText = `You said: "${message.text}"`
 
@@ -30,7 +40,7 @@ app.post('/events', async (c) => {
           responseText = `Hi there, ${event.user.displayName}!`
         }
       }
-    } else if (event.type === 'ADDED_TO_SPACE') {
+    } else if (event.type === EventType.AddedToSpace) {
       responseText =
         `Thanks for adding me to this space, ${event.user.displayName}!`
     }
