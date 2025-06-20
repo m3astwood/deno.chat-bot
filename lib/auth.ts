@@ -6,10 +6,7 @@ import { GoogleAuth } from 'google-auto-library'
 // The service account should be granted appropriate roles in Google Cloud IAM,
 // e.g., 'Google Chat API Editor' or a custom role.
 const SCOPES = env.SCOPES
-
-// Path to your service account key file (downloaded from Google Cloud Console).
-// This file should contain "private_key" and "client_email".
-const CREDENTIALS_PATH = join(Deno.cwd(), env.CREDENTIALS_FILE)
+const SERVICE_ACCOUNT = env.SERVICE_ACCOUNT
 
 /**
  * Authorizes using a service account and returns a GoogleAuth client.
@@ -19,8 +16,7 @@ const CREDENTIALS_PATH = join(Deno.cwd(), env.CREDENTIALS_FILE)
  */
 export async function authorizeServiceAccount(): Promise<GoogleAuth> {
   try {
-    const credentialsJson = await Deno.readTextFile(CREDENTIALS_PATH)
-    const credentials = JSON.parse(credentialsJson)
+    const credentials = SERVICE_ACCOUNT
 
     // Initialize GoogleAuth with service account credentials and scopes.
     const auth = new GoogleAuth({
