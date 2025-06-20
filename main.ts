@@ -1,9 +1,9 @@
 import { Hono } from 'hono'
-import Client from './lib/auth.ts'
 import { EventType, GoogleChatEvent } from './types/Events.ts'
+import { Commands } from './types/Commands.ts'
+import { whoIs } from './controllers/commands.ts'
 
 const app = new Hono()
-const client = Client
 
 app.get('/', (c) => {
   return c.json({
@@ -22,14 +22,17 @@ app.post('/events', async (c) => {
       const message = event.message
 
       if (message.slashCommand) {
-        console.log(
-          'SlashCommand',
-          JSON.stringify(message.slashCommand, null, 2),
-        )
-        responseText = `You requested a command ${message.text}`
-      }
+        switch (message.slashCommand.commandId) {
+          case Commands.Who:
+            console.log(await whoIs())
+            break
 
-      if (message.text) {
+          default:
+            responseText =
+              `You requested an un implemented command ${message.text} (${message.slashCommand.commandId})`
+            break
+        }
+      } else if (message.text) {
         responseText = `You said: "${message.text}"`
 
         if (message.text.includes('hello bot')) {

@@ -1,5 +1,6 @@
 {
 	"imports": {
+		"google-apps/chat": "npm:@google-apps/chat@^0.15.0",
 		"hono": "jsr:@hono/hono@^4.7.11",
 		"zod": "npm:zod@^3.25.67",
 		"google-auth-library": "npm:google-auth-library@9",

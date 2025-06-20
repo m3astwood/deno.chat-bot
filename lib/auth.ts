@@ -1,5 +1,5 @@
 import { env } from './env.ts'
-import { GoogleAuth } from 'google-auth-library'
+import { AnyAuthClient, GoogleAuth, JWT } from 'google-auth-library'
 
 // If modifying these scopes, ensure your service account has the necessary permissions.
 // The service account should be granted appropriate roles in Google Cloud IAM,
@@ -13,7 +13,7 @@ const SERVICE_ACCOUNT = env.SERVICE_ACCOUNT
  *
  * @return {Promise<GoogleAuth>} An authorized GoogleAuth client.
  */
-async function authorizeServiceAccount(): Promise<unknown> {
+async function authorizeServiceAccount(): Promise<JWT | AnyAuthClient> {
   try {
     const credentials = SERVICE_ACCOUNT
 
