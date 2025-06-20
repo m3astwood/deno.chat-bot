@@ -24,9 +24,10 @@ app.post('/events', async (c) => {
       if (message.slashCommand) {
         switch (Number(message.slashCommand.commandId)) {
           case Commands.Who:
-            console.log(await whoIs(message.space.name))
+            responseText = (await whoIs(message.space.name)).map((member) =>
+              `${member.member?.displayName} (${member.member?.email}) - Type: ${member.member?.type}`
+            ).join(', ')
             break
-
           default:
             responseText =
               `You requested an un implemented command ${message.text} (${message.slashCommand.commandId})`

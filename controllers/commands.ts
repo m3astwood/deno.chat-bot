@@ -1,37 +1,48 @@
-import { env } from '../lib/env.ts'
-import { ChatServiceClient } from 'google-apps/chat'
+import Client from '../lib/auth.ts'
 
 export async function whoIs(spaceName: string) {
   try {
-    console.log('Initializing ChatServiceClient...')
-    const chatClient = new ChatServiceClient({
-      credentials: {
-        client_email: env.SERVICE_ACCOUNT.client_email,
-        private_key: env.SERVICE_ACCOUNT.private_key!.replace(/\\n/g, '\n'),
-      },
-      // Ensure your SCOPES include necessary permissions, e.g., 'https://www.googleapis.com/auth/chat.memberships.readonly'
-      scopes: env.SCOPES,
-    })
-
-    console.log('Getting memberships for space:', spaceName)
+    console.log('Getting members for space:', spaceName)
     const members: any[] = [] // Use a more specific type if you have it, like ChatMembership[]
 
-    // 2. Call listMembershipsAsync and iterate over the asynchronous generator
-    // The library handles pagination and internal token management.
-    const pageResult = chatClient.listMembershipsAsync({
-      parent: spaceName, // The space name in the format "spaces/SPACE_ID"
-      // You can add other options like pageSize, filter, etc., here if needed
-      // pageSize: 100 // Example: request up to 100 results per page
-    })
+    let nextPageToken: string | undefined = undefined
+    let hasMorePages = true
 
-    for await (const response of pageResult) {
-      console.log('Received page of memberships:', response)
-      if (response.memberships && Array.isArray(response.memberships)) {
-        members.push(...response.memberships)
+    while (hasMorePages) {
+      // Construct the API URL for listing memberships
+      // The spaceName should be in the format "spaces/SPACE_ID"
+      let url = `https://chat.googleapis.com/v1/${spaceName}/members`
+      if (nextPageToken) {
+        url += `?pageToken=${nextPageToken}`
       }
+
+      console.log(`Fetching memberships from: ${url}`)
+
+      // 2. Make the HTTP request using fetch
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${Client.token}`, // Use the obtained access token
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        const errorBody = await response.text()
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorBody}`,
+        )
+      }
+
+      const data = await response.json()
+
+      if (data.memberships && Array.isArray(data.memberships)) {
+        members.push(...data.memberships) // Add fetched members to the array
+      }
+
+      nextPageToken = data.nextPageToken // Get the token for the next page
+      hasMorePages = !!nextPageToken // Continue if nextPageToken exists
     }
 
-    console.log('Finished getting all members.')
     return members
   } catch (error) {
     console.error('Error in whoIs:', error)
