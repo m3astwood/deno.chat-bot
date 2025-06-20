@@ -22,7 +22,7 @@ app.post('/events', async (c) => {
       const message = event.message
 
       if (message.slashCommand) {
-        switch (message.slashCommand.commandId) {
+        switch (Number(message.slashCommand.commandId)) {
           case Commands.Who:
             console.log(await whoIs())
             break
