@@ -1,13 +1,13 @@
 import { env } from '../lib/env.ts'
-import Client from '../lib/auth.ts'
 import { ChatServiceClient } from 'google-apps/chat'
 
 export async function whoIs() {
   try {
     const chatClient = new ChatServiceClient({
-      // FIX : unknown type
-      // @ts-ignore: unknown type
-      authClient: Client,
+      credentials: {
+        client_email: env.SERVICE_ACCOUNT.client_email,
+        private_key: env.SERVICE_ACCOUNT.private_key
+      },
       scopes: env.SCOPES,
     })
 
