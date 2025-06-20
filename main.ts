@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import Client from './lib/auth.ts'
-import { EventType } from './types/Events.ts'
+import { EventType, GoogleChatEvent } from './types/Events.ts'
 
 const app = new Hono()
 const client = Client
@@ -14,23 +14,19 @@ app.get('/', (c) => {
 // Define a POST route for Google Chat events
 app.post('/events', async (c) => {
   try {
-    const event = await c.req.json()
-    console.log(
-      'Received Google Chat Event:',
-      JSON.stringify(event.message, null, 2),
-    )
+    const event: GoogleChatEvent = await c.req.json()
 
     let responseText = 'Hello from your Deno Hono bot!'
 
     if (event.type === EventType.Message) {
       const message = event.message
 
-      if (message.annotations.slashCommand) {
+      if (message.slashCommand) {
         console.log(
           'SlashCommand',
-          JSON.stringify(message.annotations.slashCommand, null, 2),
+          JSON.stringify(message.slashCommand, null, 2),
         )
-        responseText = `You requested a command...`
+        responseText = `You requested a command ${message.text}`
       }
 
       if (message.text) {
