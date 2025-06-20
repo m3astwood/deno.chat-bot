@@ -1,5 +1,10 @@
 import { UserType } from './Events.ts'
 
+export interface SavedMember {
+  name: string
+  breakfasts: number
+}
+
 export interface SpaceMember {
   name: string
   state: string
