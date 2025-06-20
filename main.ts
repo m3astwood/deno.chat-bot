@@ -43,7 +43,7 @@ app.post('/events', async (c) => {
 })
 
 app.all('*', (c) => {
-  console.log('message to unknown endpoint', c)
+  console.log('message to unknown endpoint', c.req.path)
   return c.json({ message: 'Not Found or Method Not Allowed' }, 404)
 })
 
