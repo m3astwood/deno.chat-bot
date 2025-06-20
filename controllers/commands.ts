@@ -1,46 +1,28 @@
-import Client from '../lib/auth.ts'
+import { api } from '../lib/service.ts'
+import { SpaceMember } from '../types/Data.ts'
 
 export async function whoIs(spaceName: string) {
   try {
     console.log('Getting members for space:', spaceName)
-    const members: any[] = [] // Use a more specific type if you have it, like ChatMembership[]
+    const members: SpaceMember[] = []
 
-    let nextPageToken: string | undefined = undefined
+    let nextPageToken: { pageToken: string } | undefined = undefined
     let hasMorePages = true
 
     while (hasMorePages) {
-      // Construct the API URL for listing memberships
-      // The spaceName should be in the format "spaces/SPACE_ID"
-      let url = `https://chat.googleapis.com/v1/${spaceName}/members`
-      if (nextPageToken) {
-        url += `?pageToken=${nextPageToken}`
-      }
 
-      console.log(`Fetching memberships from: ${url}`)
+      console.log(`Fetching memberships from: ${spaceName}`)
 
-      // 2. Make the HTTP request using fetch
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${Client.token}`, // Use the obtained access token
-          'Content-Type': 'application/json',
-        },
+      const response: { memberships: SpaceMember[], nextPageToken: string } = await api(`${spaceName}/members`, {
+        query: nextPageToken
       })
 
-      if (!response.ok) {
-        const errorBody = await response.text()
-        throw new Error(
-          `HTTP error! Status: ${response.status}, Body: ${errorBody}`,
-        )
+      if (response.memberships && Array.isArray(response.memberships)) {
+        members.push(...response.memberships)
       }
 
-      const data = await response.json()
-
-      if (data.memberships && Array.isArray(data.memberships)) {
-        members.push(...data.memberships) // Add fetched members to the array
-      }
-
-      nextPageToken = data.nextPageToken // Get the token for the next page
-      hasMorePages = !!nextPageToken // Continue if nextPageToken exists
+      nextPageToken = { pageToken: response.nextPageToken }
+      hasMorePages = !!nextPageToken.pageToken
     }
 
     console.log(members)
@@ -48,6 +30,6 @@ export async function whoIs(spaceName: string) {
     return members
   } catch (error) {
     console.error('Error in whoIs:', error)
-    throw error // Re-throw to allow caller to handle
+    throw error
   }
 }

@@ -25,7 +25,7 @@ app.post('/events', async (c) => {
         switch (Number(message.slashCommand.commandId)) {
           case Commands.Who:
             responseText = (await whoIs(message.space.name)).map((member) =>
-              `${member.member?.displayName} (${member.member?.email}) - Type: ${member.member?.type}`
+              `${member.member?.displayName} - Type: ${member.member?.type}`
             ).join(', ')
             break
           default:
