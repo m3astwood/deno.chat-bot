@@ -1,6 +1,5 @@
 import { env } from './env.ts'
-import { join } from 'path'
-import { GoogleAuth } from 'google-auto-library'
+import { GoogleAuth } from 'google-auth-library'
 
 // If modifying these scopes, ensure your service account has the necessary permissions.
 // The service account should be granted appropriate roles in Google Cloud IAM,
@@ -14,7 +13,7 @@ const SERVICE_ACCOUNT = env.SERVICE_ACCOUNT
  *
  * @return {Promise<GoogleAuth>} An authorized GoogleAuth client.
  */
-export async function authorizeServiceAccount(): Promise<GoogleAuth> {
+async function authorizeServiceAccount(): Promise<unknown> {
   try {
     const credentials = SERVICE_ACCOUNT
 
@@ -27,13 +26,18 @@ export async function authorizeServiceAccount(): Promise<GoogleAuth> {
       scopes: SCOPES,
     })
 
+
     console.log('Service account authorized successfully.')
-    return auth
+    const client = await auth.getClient()
+
+    return client
   } catch (err) {
     console.error('Error authorizing service account:', err)
     console.error(
-      "Please ensure your 'credentials.json' file is a valid service account key and located in the project root.",
+      "Please ensure your credentials env variable is a valid service account key.",
     )
     throw err
   }
 }
+
+export default await authorizeServiceAccount()

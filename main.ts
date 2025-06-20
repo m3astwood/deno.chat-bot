@@ -1,11 +1,10 @@
 import { Hono } from 'hono'
-import { authorizeServiceAccount } from './lib/auth.ts'
+import Client from './lib/auth.ts'
 
 const app = new Hono()
+const client = Client
 
-authorizeServiceAccount()
-
-app.get('/', async (c) => {
+app.get('/', (c) => {
   return c.json({
     message: 'test edge server',
   })
@@ -44,6 +43,7 @@ app.post('/events', async (c) => {
 })
 
 app.all('*', (c) => {
+  console.log('message to unknown endpoint', c)
   return c.json({ message: 'Not Found or Method Not Allowed' }, 404)
 })
 
