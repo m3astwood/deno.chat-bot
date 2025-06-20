@@ -43,6 +43,8 @@ export async function whoIs(spaceName: string) {
       hasMorePages = !!nextPageToken // Continue if nextPageToken exists
     }
 
+    console.log(members)
+
     return members
   } catch (error) {
     console.error('Error in whoIs:', error)
