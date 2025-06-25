@@ -12,27 +12,25 @@ app.get('/', (c) => {
 app.post('/events', async (c) => {
   try {
     const event: GoogleChatEvent = await c.req.json()
-    console.log(event.message)
+    console.log(event)
 
-    let responseText = 'Hello from your Deno Hono bot!'
+    let returnObject = null
 
     if (event.type === EventType.Message) {
-
       const { slashCommand, text, space } = event.message
 
       if (slashCommand) {
-
         const commandId = Number(slashCommand.commandId)
         const cmd = SlashCommands.get(commandId)
-        responseText = `${await cmd?.execute(space.name)}`
+        returnObject = `${await cmd?.execute(space.name)}`
       }
-
     } else if (event.type === EventType.AddedToSpace) {
-      responseText =
-        `Thanks for adding me to this space, ${event.user.displayName}!`
+      returnObject = { text: `Thanks for adding me to this space, ${event.user.displayName}!` }
     }
 
-    return c.json({ text: responseText })
+    if (returnObject) {
+      return c.json(returnObject)
+    }
   } catch (error) {
     console.error('Error processing event:', error)
     return c.json({ text: 'Sorry, I encountered an error.' }, 500)

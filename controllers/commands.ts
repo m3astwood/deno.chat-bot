@@ -45,7 +45,7 @@ SlashCommands.set(Commands.Who, {
       await writeMembers(spaceName, updatedMembers)
 
       // return message
-      return `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!`
+      return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
     } catch (error) {
       console.error('Error in whoIs:', error)
       throw error
@@ -64,59 +64,72 @@ SlashCommands.set(Commands.Who, {
  */
 SlashCommands.set(Commands.Reset, {
   execute: async (spaceName: string) => {
-    // send verification...
-    // get members
-    // set all members' breakfasts to O
-    // return a message
-    return `test reset...`
+    console.log('RESET COMMAND')
+    return {
+      text: 'this is a test message from reset',
+      cardsV2: [
+        {
+          card: {
+            sections: [
+              {
+                header: 'Are you sure you want to reset all breakfasts?',
+                collapsible: false,
+                uncollapsibleWidgetsCount: 1,
+                widgets: [
+                  {
+                    textParagraph: {
+                      text:
+                        'By pressing the reset button you will revert all breakfasts to zero. This action is irreversible, are you sure you want to continue ?',
+                      maxLines: 2,
+                    },
+                  },
+                  {
+                    buttonList: {
+                      buttons: [
+                        {
+                          text: 'No thank you',
+                          type: 'OUTLINED',
+                          onClick: {
+                            openLink: {
+                              url: 'https://developers.google.com/chat/ui/widgets/button-list',
+                            },
+                          },
+                        },
+                        {
+                          text: 'RESET!',
+                          icon: {
+                            materialIcon: {
+                              name: 'delete',
+                            },
+                          },
+                          color: {
+                            red: 1,
+                            green: 0,
+                            blue: 0,
+                            alpha: 1,
+                          },
+                          type: 'FILLED',
+                          onClick: {
+                            action: {
+                              function: 'goToView',
+                              parameters: [
+                                {
+                                  key: 'viewType',
+                                  value: 'BIRD EYE VIEW',
+                                },
+                              ],
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+    }
   },
 })
-
-// /**
-//  * Opens the second step of the dialog that lets users confirm details.
-//  *
-//  * @param {Object} event The event object from the Google Workspace add-on.
-//  * @return {Object} update the dialog.
-//  */
-// function openConfirmationDialog(event) {
-//   // Retrieve the form input values
-//   const name = event.commonEventObject.formInputs['contactName'].stringInputs.value[0]
-//   return {
-//     action: {
-//       navigations: [{
-//         pushCard: {
-//           sections: [{
-//             widgets: [
-//               {
-//                 // Display the input values for confirmation
-//                 textParagraph: { text: '<b>Name:</b> ' + name },
-//               },
-//               WIDGETS,
-//               {
-//                 buttonList: {
-//                   buttons: [{
-//                     text: 'SUBMIT',
-//                     onClick: {
-//                       action: {
-//                         // Use runtime environment variable set with self URL
-//                         function: process.env.BASE_URL,
-//                         parameters: [{
-//                           key: 'actionName',
-//                           value: 'submitDialog',
-//                         }, {
-//                           // Pass input values as parameters for last dialog step (submission)
-//                           key: 'contactName',
-//                           value: name,
-//                         }],
-//                       },
-//                     },
-//                   }],
-//                 },
-//               },
-//             ],
-//           }],
-//         },
-//       }],
-//     },
-//   }
-// }

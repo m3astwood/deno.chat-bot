@@ -4,6 +4,11 @@ export enum EventType {
   RemovedFromSpace = 'REMOVED_FROM_SPACE',
   CardClicked = 'CARD_CLICKED',
   Action = 'ACTION',
+  AppCommand = 'APP_COMMAND'
+}
+
+export enum DialogEventType {
+  RequestDialog = 'REQUEST_DIALOG'
 }
 
 export enum SpaceType {
@@ -35,6 +40,8 @@ export interface GoogleChatEvent {
     appCommandId: number
     appCommandType: string
   }
+  isDialogEvent?: boolean
+  dialogEventType?: DialogEventType
 }
 
 interface Space {
