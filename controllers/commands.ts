@@ -30,7 +30,7 @@ SlashCommands.set(Commands.Who, {
       const members = await getMembers(spaceName)
 
       // write new members to KV
-      const savedMembers = await writeMembers(members)
+      const savedMembers = await writeMembers(spaceName, members)
 
       const [ personOne, personTwo ] = chooseTwoUsers(savedMembers)
 
