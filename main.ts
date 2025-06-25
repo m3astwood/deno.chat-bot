@@ -21,9 +21,7 @@ app.post('/events', async (c) => {
 
       if (slashCommand) {
         const commandId = Number(slashCommand.commandId)
-
         const cmd = SlashCommands.get(commandId)
-
         responseText = `${await cmd?.execute(space.name)}`
       }
 
