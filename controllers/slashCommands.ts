@@ -69,12 +69,11 @@ SlashCommands.set(SlashCommandCode.Reset, {
     const userName = event.user.name
 
     return {
-      privateMessageViewer: {
-        name: userName,
-      },
-      cardsV2: [
-        {
-          card: {
+      actionResponse: {
+        type: 'DIALOG',
+        dialogAction: {
+          dialog: {
+            body: {
             sections: [
               {
                 header: 'Are you sure you want to reset all breakfasts?',
@@ -132,9 +131,79 @@ SlashCommands.set(SlashCommandCode.Reset, {
                 ],
               },
             ],
+            },
           },
         },
-      ],
+      },
     }
+
+    // return {
+    //   privateMessageViewer: {
+    //     name: userName,
+    //   },
+    //   cardsV2: [
+    //     {
+    //       card: {
+    //         sections: [
+    //           {
+    //             header: 'Are you sure you want to reset all breakfasts?',
+    //             collapsible: false,
+    //             uncollapsibleWidgetsCount: 1,
+    //             widgets: [
+    //               {
+    //                 textParagraph: {
+    //                   text:
+    //                     'By pressing the reset button you will revert all breakfasts to zero. This action is irreversible, are you sure you want to continue ?',
+    //                   maxLines: 2,
+    //                 },
+    //               },
+    //               {
+    //                 buttonList: {
+    //                   buttons: [
+    //                     {
+    //                       text: 'No thank you',
+    //                       type: 'OUTLINED',
+    //                       onClick: {
+    //                         action: {
+    //                           function: CardCommandCode.Cancel,
+    //                           parameters: [
+    //                             {
+    //                               key: 'functionName',
+    //                               value: CardCommandCode.Reset,
+    //                             },
+    //                           ],
+    //                         },
+    //                       },
+    //                     },
+    //                     {
+    //                       text: 'RESET!',
+    //                       icon: {
+    //                         materialIcon: {
+    //                           name: 'delete',
+    //                         },
+    //                       },
+    //                       color: {
+    //                         red: 1,
+    //                         green: 0,
+    //                         blue: 0,
+    //                         alpha: 1,
+    //                       },
+    //                       type: 'FILLED',
+    //                       onClick: {
+    //                         action: {
+    //                           function: CardCommandCode.Reset,
+    //                         },
+    //                       },
+    //                     },
+    //                   ],
+    //                 },
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //     },
+    //   ],
+    // }
   },
 })
