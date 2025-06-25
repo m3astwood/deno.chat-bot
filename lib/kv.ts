@@ -11,8 +11,13 @@ export async function writeMembers(spaceName: string, members: SpaceMember[]) {
   const existingNames = value?.map(m => m.name) || []
   const formattedMembersNew =  members.map(m => ({ name: m.member.name, displayName: m.member.displayName, breakfasts: 0 })).filter(m => !existingNames.includes(m.name))
 
-  // @ts-ignore : I know this is an array
-  const updatedMembers = [ ...value, ...formattedMembersNew ]
+  let updatedMembers
+  if (value) {
+    // @ts-ignore : I know this is an array
+    updatedMembers = [ ...value, ...formattedMembersNew ]
+  } else {
+    updatedMembers = formattedMembersNew
+  }
 
   // write all members to KV again
   await KV.set([spaceName, 'members'], updatedMembers)
