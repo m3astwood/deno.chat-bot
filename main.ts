@@ -21,7 +21,7 @@ app.post('/events', async (c) => {
       if (slashCommand) {
         const commandId = Number(slashCommand.commandId)
         const cmd = SlashCommands.get(commandId)
-        returnObject = await cmd?.execute(space.name)
+        returnObject = await cmd?.execute(event)
       }
     } else if (event.type === EventType.CardClicked) {
       const { invokedFunction, parameters } = event.common
