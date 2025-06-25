@@ -34,9 +34,6 @@ SlashCommands.set(Commands.Who, {
 
       const [ personOne, personTwo ] = chooseTwoUsers(savedMembers)
 
-      console.log('personOne :', personOne)
-      console.log('personTwo :', personTwo)
-
       return `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!`
     } catch (error) {
       console.error('Error in whoIs:', error)
