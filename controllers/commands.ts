@@ -34,7 +34,7 @@ SlashCommands.set(Commands.Who, {
 
       console.log('consolidated', consolidatedMembers)
 
-      const [ personOne, personTwo ] = chooseTwoUsers(consolidatedMembers)
+      const [personOne, personTwo] = chooseTwoUsers(consolidatedMembers)
 
       // update chosen members breakfasts
       const updatedMembers = updateMembers(consolidatedMembers, personOne, personTwo)
@@ -52,3 +52,71 @@ SlashCommands.set(Commands.Who, {
     }
   },
 })
+
+/*
+ * The /reset command
+ *
+ * this resets the breakfasts for all users in the chat,
+ * you will be prompted with a are you sure and can only be
+ * run by the chat group admin.
+ *
+ * If you're not admin you'll get a friendly response
+ */
+SlashCommands.set(Commands.Reset, {
+  execute: async (spaceName: string) => {
+    // send verification...
+    // get members
+    // set all members' breakfasts to O
+    // return a message
+    return `test reset...`
+  },
+})
+
+// /**
+//  * Opens the second step of the dialog that lets users confirm details.
+//  *
+//  * @param {Object} event The event object from the Google Workspace add-on.
+//  * @return {Object} update the dialog.
+//  */
+// function openConfirmationDialog(event) {
+//   // Retrieve the form input values
+//   const name = event.commonEventObject.formInputs['contactName'].stringInputs.value[0]
+//   return {
+//     action: {
+//       navigations: [{
+//         pushCard: {
+//           sections: [{
+//             widgets: [
+//               {
+//                 // Display the input values for confirmation
+//                 textParagraph: { text: '<b>Name:</b> ' + name },
+//               },
+//               WIDGETS,
+//               {
+//                 buttonList: {
+//                   buttons: [{
+//                     text: 'SUBMIT',
+//                     onClick: {
+//                       action: {
+//                         // Use runtime environment variable set with self URL
+//                         function: process.env.BASE_URL,
+//                         parameters: [{
+//                           key: 'actionName',
+//                           value: 'submitDialog',
+//                         }, {
+//                           // Pass input values as parameters for last dialog step (submission)
+//                           key: 'contactName',
+//                           value: name,
+//                         }],
+//                       },
+//                     },
+//                   }],
+//                 },
+//               },
+//             ],
+//           }],
+//         },
+//       }],
+//     },
+//   }
+// }
