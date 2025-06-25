@@ -28,6 +28,8 @@ app.post('/events', async (c) => {
       returnObject = { text: `Thanks for adding me to this space, ${event.user.displayName}!` }
     }
 
+    console.log(returnObject)
+
     if (returnObject) {
       return c.json(returnObject)
     }
