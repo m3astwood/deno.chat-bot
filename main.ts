@@ -17,13 +17,14 @@ app.post('/events', async (c) => {
 
     if (event.type === EventType.Message) {
 
-      const { slashCommand, text } = event.message
+      const { slashCommand, text, space } = event.message
 
       if (slashCommand) {
         const commandId = Number(slashCommand.commandId)
 
         const cmd = SlashCommands.get(commandId)
-        responseText = `${await cmd?.execute()}`
+
+        responseText = `${await cmd?.execute(space.name)}`
       }
 
     } else if (event.type === EventType.AddedToSpace) {

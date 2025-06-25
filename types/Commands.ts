@@ -3,6 +3,6 @@ export enum Commands {
 }
 
 export interface OnCommand {
-  execute: (...args: any) => Promise<Response>
+  execute: (...args: any) => Promise<any>
 }
 
