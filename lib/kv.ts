@@ -9,15 +9,10 @@ export async function writeMembers(members: SpaceMember[]) {
 
   // @ts-ignore : I know this is an array
   const existingNames = value?.map(m => m.name)
-
-  const formattedMembers =  members.map(m => ({ name: m.name, displayName: m.member.displayName, breakfasts: 0 })).filter(m => !existingNames.includes(m.name))
-
-  // loop through existing members and passed members to add non existent
-  console.log('existing :', existingNames)
-  console.log('formatted :', formattedMembers)
+  const formattedMembersNew =  members.map(m => ({ name: m.name, displayName: m.member.displayName, breakfasts: 0 })).filter(m => !existingNames.includes(m.name))
 
   // @ts-ignore : I know this is an array
-  const updatedMembers = [ ...value, ...formattedMembers ]
+  const updatedMembers = [ ...value, ...formattedMembersNew ]
 
   // write all members to KV again
   await KV.set(['members'], updatedMembers)

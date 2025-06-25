@@ -23,7 +23,7 @@ const chooseOneWeighted = (users: SavedMember[]): SavedMember | null => {
   for (const user of weightedUsers) {
     random -= user.weight
     if (random <= 0) {
-      return { name: user.name, breakfasts: user.breakfasts } // Return the original user object
+      return { name: user.name, displayName: user.displayName, breakfasts: user.breakfasts } // Return the original user object
     }
   }
 

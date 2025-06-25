@@ -1,6 +1,7 @@
 import { writeMembers } from '../lib/kv.ts'
 import { getMembers } from '../lib/api.ts'
 import { Commands, OnCommand } from '../types/Commands.ts'
+import { chooseTwoUsers } from '../lib/Chooser.ts'
 
 export const SlashCommands: Map<Commands, OnCommand> = new Map()
 
@@ -31,7 +32,9 @@ SlashCommands.set(Commands.Who, {
       // write new members to KV
       const savedMembers = await writeMembers(members)
 
-      return members
+      const [ personOne, personTwo ] = chooseTwoUsers(savedMembers)
+
+      return `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!`
     } catch (error) {
       console.error('Error in whoIs:', error)
       throw error

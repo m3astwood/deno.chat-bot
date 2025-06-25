@@ -2,6 +2,7 @@ import { UserType } from './Events.ts'
 
 export interface SavedMember {
   name: string
+  displayName: string
   breakfasts: number
 }
 
