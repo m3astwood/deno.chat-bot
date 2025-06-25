@@ -1,6 +1,5 @@
-import { getSavedMembers, writeMembers } from '../lib/kv.ts'
-import { api } from '../lib/api.ts'
-import { SpaceMember } from '../types/Data.ts'
+import { writeMembers } from '../lib/kv.ts'
+import { getMembers } from '../lib/api.ts'
 import { Commands, OnCommand } from '../types/Commands.ts'
 
 export const SlashCommands: Map<Commands, OnCommand> = new Map()
@@ -27,32 +26,10 @@ SlashCommands.set(Commands.Who, {
   execute: async (spaceName: string) => {
     try {
       console.log('Getting members for space:', spaceName)
-      const members: SpaceMember[] = []
-
-      let nextPageToken: { pageToken: string } | undefined = undefined
-      let hasMorePages = true
-
-      while (hasMorePages) {
-        console.log(`Fetching memberships from: ${spaceName}`)
-        const response: { memberships: SpaceMember[]; nextPageToken: string } = await api(`${spaceName}/members`, {
-          query: nextPageToken,
-        })
-
-        console.log('members :', response)
-        if (response.memberships && Array.isArray(response.memberships)) {
-          members.push(...response.memberships)
-        }
-
-        nextPageToken = { pageToken: response.nextPageToken }
-        hasMorePages = !!nextPageToken.pageToken
-      }
+      const members = await getMembers(spaceName)
 
       // write new members to KV
-      await writeMembers(members)
-
-      // choose two members
-      const savedMembers = await getSavedMembers()
-      console.log(savedMembers)
+      const savedMembers = await writeMembers(members)
 
       return members
     } catch (error) {

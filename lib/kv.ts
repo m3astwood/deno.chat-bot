@@ -7,11 +7,10 @@ export async function writeMembers(members: SpaceMember[]) {
   const { value: existing } = await getSavedMembers()
 
   // loop through existing members and passed members to add non existent
-  console.log(existing)
+  console.log('existing :', existing)
 
   // write all members to KV again
-
-  await KV.set(['members'], members.map(m => ({ ...members, breakfasts: 0 })))
+  await KV.set(['members'], members.map(m => ({ name: m.name, displayName: m.member.displayName, breakfasts: 0 })))
 }
 
 export async function getSavedMembers() {
