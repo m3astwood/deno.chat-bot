@@ -12,6 +12,7 @@ app.get('/', (c) => {
 app.post('/events', async (c) => {
   try {
     const event: GoogleChatEvent = await c.req.json()
+    console.log(event.message)
 
     let responseText = 'Hello from your Deno Hono bot!'
 
@@ -20,8 +21,6 @@ app.post('/events', async (c) => {
       const { slashCommand, text, space } = event.message
 
       if (slashCommand) {
-
-        console.log(event.message)
 
         const commandId = Number(slashCommand.commandId)
         const cmd = SlashCommands.get(commandId)
