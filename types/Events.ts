@@ -22,10 +22,7 @@ export enum UserType {
 }
 
 export interface GoogleChatEvent {
-  common: {
-    hostApp: string
-    userLocale: string
-  }
+  common: CommonEventData
   space: Space
   user: User
   configCompleteRedirectUrl: string
@@ -43,6 +40,18 @@ export interface GoogleChatEvent {
   isDialogEvent?: boolean
   dialogEventType?: DialogEventType
 }
+
+interface CommonEventData {
+  hostApp: string
+  userLocale: string
+  timeZone: {
+    id: string
+    offset: number
+  }
+  parameters?: any
+  invokedFunction?: string
+}
+
 
 interface Space {
   lastActiveTime: string

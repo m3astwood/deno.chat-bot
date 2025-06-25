@@ -1,8 +1,9 @@
 import { writeMembers } from '../lib/Members.ts'
 import { getMembers } from '../lib/api.ts'
-import { Commands, OnCommand } from '../types/Commands.ts'
+import { CardCommandCode, OnCommand, SlashCommandCode } from '../types/Commands.ts'
 import { chooseTwoUsers } from '../lib/Chooser.ts'
 import { consolidateMembers, updateMembers } from '../lib/Members.ts'
+import { GoogleChatEvent } from '../types/Events.ts'
 
 export const SlashCommands: Map<Commands, OnCommand> = new Map()
 
@@ -24,9 +25,10 @@ export const SlashCommands: Map<Commands, OnCommand> = new Map()
  * - have a list of all users that have been selected already
  * - weight the selection in their favour to not be chosen
  */
-SlashCommands.set(Commands.Who, {
-  execute: async (spaceName: string) => {
+SlashCommands.set(SlashCommandCode.Who, {
+  execute: async (event: GoogleChatEvent) => {
     try {
+      const spaceName = event.space.name
       console.log('Getting members for space:', spaceName)
       const members = await getMembers(spaceName)
 
@@ -62,10 +64,14 @@ SlashCommands.set(Commands.Who, {
  *
  * If you're not admin you'll get a friendly response
  */
-SlashCommands.set(Commands.Reset, {
-  execute: async (spaceName: string) => {
-    console.log('RESET COMMAND')
+SlashCommands.set(SlashCommandCode.Reset, {
+  execute: async (event: GoogleChatEvent) => {
+    const userName = event.user.name
+
     return {
+      privateMessageViewer: {
+        name: userName,
+      },
       cardsV2: [
         {
           card: {
@@ -89,8 +95,14 @@ SlashCommands.set(Commands.Reset, {
                           text: 'No thank you',
                           type: 'OUTLINED',
                           onClick: {
-                            openLink: {
-                              url: 'https://developers.google.com/chat/ui/widgets/button-list',
+                            action: {
+                              function: CardCommandCode.Cancel,
+                              parameters: [
+                                {
+                                  key: 'functionName',
+                                  value: CardCommandCode.Reset,
+                                },
+                              ],
                             },
                           },
                         },
@@ -110,13 +122,7 @@ SlashCommands.set(Commands.Reset, {
                           type: 'FILLED',
                           onClick: {
                             action: {
-                              function: 'goToView',
-                              parameters: [
-                                {
-                                  key: 'viewType',
-                                  value: 'BIRD EYE VIEW',
-                                },
-                              ],
+                              function: CardCommandCode.Reset,
                             },
                           },
                         },

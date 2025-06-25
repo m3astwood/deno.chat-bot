@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { EventType, GoogleChatEvent } from './types/Events.ts'
-import { SlashCommands } from './controllers/commands.ts'
+import { SlashCommands } from './controllers/slashCommands.ts'
 
 const app = new Hono()
 
@@ -24,8 +24,10 @@ app.post('/events', async (c) => {
         returnObject = await cmd?.execute(space.name)
       }
     } else if (event.type === EventType.CardClicked) {
+      const { invokedFunction, parameters } = event.common
+
       console.log(event.common)
-      returnObject = { text: 'You have clicked a card, we are still working on implementing that functionality' }
+      returnObject = { text: `You have clicked a card, we are still working on implementing the method "${invokedFunction}"` }
     } else if (event.type === EventType.AddedToSpace) {
       returnObject = { text: `Thanks for adding me to this space, ${event.user.displayName}!` }
     }
