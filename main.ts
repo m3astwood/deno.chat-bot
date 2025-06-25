@@ -22,13 +22,11 @@ app.post('/events', async (c) => {
       if (slashCommand) {
         const commandId = Number(slashCommand.commandId)
         const cmd = SlashCommands.get(commandId)
-        returnObject = `${await cmd?.execute(space.name)}`
+        returnObject = await cmd?.execute(space.name)
       }
     } else if (event.type === EventType.AddedToSpace) {
       returnObject = { text: `Thanks for adding me to this space, ${event.user.displayName}!` }
     }
-
-    console.log(returnObject)
 
     if (returnObject) {
       return c.json(returnObject)

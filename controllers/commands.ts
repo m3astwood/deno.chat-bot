@@ -66,7 +66,6 @@ SlashCommands.set(Commands.Reset, {
   execute: async (spaceName: string) => {
     console.log('RESET COMMAND')
     return {
-      text: 'this is a test message from reset',
       cardsV2: [
         {
           card: {
