@@ -12,7 +12,6 @@ app.get('/', (c) => {
 app.post('/events', async (c) => {
   try {
     const event: GoogleChatEvent = await c.req.json()
-    console.log(event)
 
     let returnObject = null
 
@@ -24,6 +23,9 @@ app.post('/events', async (c) => {
         const cmd = SlashCommands.get(commandId)
         returnObject = await cmd?.execute(space.name)
       }
+    } else if (event.type === EventType.CardClicked) {
+      console.log(event.common)
+      returnObject = { text: 'You have clicked a card, we are still working on implementing that functionality' }
     } else if (event.type === EventType.AddedToSpace) {
       returnObject = { text: `Thanks for adding me to this space, ${event.user.displayName}!` }
     }
