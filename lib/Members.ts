@@ -2,8 +2,24 @@ import { SpaceMember } from '../types/Data.ts'
 
 const KV = await Deno.openKv()
 
-// FIX: Type the KVStore better to avoid these ignores
 export async function writeMembers(spaceName: string, members: SpaceMember[]) {
+  // write all members to KV again
+  await KV.set([spaceName, 'members'], members)
+}
+
+export async function getSavedMembers(spaceName: string) {
+  return await KV.get([spaceName, 'members'])
+}
+
+export function updateMembers(originalMembers: SavedMembers[], ...newMembers: SavedMember[]) {
+  const filteredMembers = originalMembers.filter(om => {
+    return !newMembers.find(nm => nm.name === om.name)
+  })
+
+  return [ ...filteredMembers, ...newMembers ]
+}
+
+export async function consolidateMembers(spaceName: string, members: SpaceMember[]) {
   // first get existing members
   const { value } = await getSavedMembers(spaceName)
 
@@ -19,12 +35,5 @@ export async function writeMembers(spaceName: string, members: SpaceMember[]) {
     updatedMembers = formattedMembersNew
   }
 
-  // write all members to KV again
-  await KV.set([spaceName, 'members'], updatedMembers)
-
   return updatedMembers
-}
-
-export async function getSavedMembers(spaceName: string) {
-  return await KV.get([spaceName, 'members'])
 }

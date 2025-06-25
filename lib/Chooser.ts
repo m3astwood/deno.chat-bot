@@ -49,5 +49,8 @@ export const chooseTwoUsers = (users: SavedMember[]): [SavedMember, SavedMember]
 
   const secondUser = chooseOneWeighted(remainingUsers)
 
+  firstUser!.breakfasts += 1
+  secondUser!.breakfasts += 1
+
   return [firstUser!, secondUser!]
 }

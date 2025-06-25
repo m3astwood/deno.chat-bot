@@ -1,7 +1,8 @@
-import { writeMembers } from '../lib/kv.ts'
+import { writeMembers } from '../lib/Members.ts'
 import { getMembers } from '../lib/api.ts'
 import { Commands, OnCommand } from '../types/Commands.ts'
 import { chooseTwoUsers } from '../lib/Chooser.ts'
+import { consolidateMembers, updateMembers } from '../lib/Members.ts'
 
 export const SlashCommands: Map<Commands, OnCommand> = new Map()
 
@@ -29,11 +30,21 @@ SlashCommands.set(Commands.Who, {
       console.log('Getting members for space:', spaceName)
       const members = await getMembers(spaceName)
 
-      // write new members to KV
-      const savedMembers = await writeMembers(spaceName, members)
+      const consolidatedMembers = await consolidateMembers(spaceName, members)
 
-      const [ personOne, personTwo ] = chooseTwoUsers(savedMembers)
+      console.log('consolidated', consolidatedMembers)
 
+      const [ personOne, personTwo ] = chooseTwoUsers(consolidatedMembers)
+
+      // update chosen members breakfasts
+      const updatedMembers = updateMembers(consolidatedMembers, personOne, personTwo)
+
+      console.log('updated', updatedMembers)
+
+      // write members to KV
+      await writeMembers(spaceName, updatedMembers)
+
+      // return message
       return `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!`
     } catch (error) {
       console.error('Error in whoIs:', error)
