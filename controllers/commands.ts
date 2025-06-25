@@ -1,6 +1,9 @@
 import { getSavedMembers, writeMembers } from '../lib/kv.ts'
-import { api } from '../lib/service.ts'
+import { api } from '../lib/api.ts'
 import { SpaceMember } from '../types/Data.ts'
+import { Commands, OnCommand } from '../types/Commands.ts'
+
+export const SlashCommands: Map<Commands, OnCommand> = new Map()
 
 /*
  * The /who command
@@ -19,43 +22,44 @@ import { SpaceMember } from '../types/Data.ts'
  * stretch goals
  * - have a list of all users that have been selected already
  * - weight the selection in their favour to not be chosen
-**/
-export async function whoIs(spaceName: string) {
-  try {
-    console.log('Getting members for space:', spaceName)
-    const members: SpaceMember[] = []
+ */
+SlashCommands.set(Commands.Who, function whoIs(spaceName: string) {
+  return {
+    execute: async () => {
+      try {
+        console.log('Getting members for space:', spaceName)
+        const members: SpaceMember[] = []
 
-    let nextPageToken: { pageToken: string } | undefined = undefined
-    let hasMorePages = true
+        let nextPageToken: { pageToken: string } | undefined = undefined
+        let hasMorePages = true
 
-    while (hasMorePages) {
+        while (hasMorePages) {
+          console.log(`Fetching memberships from: ${spaceName}`)
+          const response: { memberships: SpaceMember[]; nextPageToken: string } = await api(`${spaceName}/members`, {
+            query: nextPageToken,
+          })
 
-      console.log(`Fetching memberships from: ${spaceName}`)
+          console.log('members :', response)
+          if (response.memberships && Array.isArray(response.memberships)) {
+            members.push(...response.memberships)
+          }
 
-      const response: { memberships: SpaceMember[], nextPageToken: string } = await api(`${spaceName}/members`, {
-        query: nextPageToken
-      })
+          nextPageToken = { pageToken: response.nextPageToken }
+          hasMorePages = !!nextPageToken.pageToken
+        }
 
-      console.log(response)
+        // write new members to KV
+        await writeMembers(members)
 
-      if (response.memberships && Array.isArray(response.memberships)) {
-        members.push(...response.memberships)
+        // choose two members
+        const savedMembers = await getSavedMembers()
+        console.log(savedMembers)
+
+        return members
+      } catch (error) {
+        console.error('Error in whoIs:', error)
+        throw error
       }
-
-      nextPageToken = { pageToken: response.nextPageToken }
-      hasMorePages = !!nextPageToken.pageToken
-    }
-
-    // write new members to KV
-    await writeMembers(members)
-
-    // choose two members
-    const savedMembers = await getSavedMembers()
-    console.log(savedMembers)
-
-    return members
-  } catch (error) {
-    console.error('Error in whoIs:', error)
-    throw error
+    },
   }
-}
+})

@@ -1,24 +1,25 @@
 {
-	"imports": {
-		"ofetch": "npm:ofetch@^1.4.1",
-		"path": "jsr:@std/path",
-		"hono": "jsr:@hono/hono@^4.7.11",
-		"zod": "npm:zod@^3.25.67",
-		"google-apps/chat": "npm:@google-apps/chat@^0.15.0",
-		"google-auth-library": "npm:google-auth-library@9"
-	},
-	"tasks": {
-		"start": "deno run --allow-net --allow-read --allow-env --env-file main.ts"
-	},
-	"compilerOptions": {
-		"jsx": "precompile",
-		"jsxImportSource": "hono/jsx"
-	},
-	"fmt": {
-		"options": {
-			"singleQuote": true,
-			"indentWidth": 2,
-			"semiColons": false
-		}
-	}
+  "imports": {
+    "ofetch": "npm:ofetch@^1.4.1",
+    "path": "jsr:@std/path",
+    "hono": "jsr:@hono/hono@^4.7.11",
+    "zod": "npm:zod@^3.25.67",
+    "google-apps/chat": "npm:@google-apps/chat@^0.15.0",
+    "google-auth-library": "npm:google-auth-library@9"
+  },
+  "tasks": {
+    "start": "deno run --allow-net --allow-read --allow-env --env-file main.ts"
+  },
+  "compilerOptions": {
+    "jsx": "precompile",
+    "jsxImportSource": "hono/jsx"
+  },
+  "fmt": {
+    "options": {
+      "singleQuote": true,
+      "indentWidth": 2,
+      "semiColons": false,
+      "lineWidth": 160
+    }
+  }
 }
