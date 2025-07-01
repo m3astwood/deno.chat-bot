@@ -4,6 +4,7 @@ import { CardCommandCode, OnCommand, SlashCommandCode } from '../types/Commands.
 import { chooseTwoUsers } from '../lib/Chooser.ts'
 import { consolidateMembers, updateMembers } from '../lib/Members.ts'
 import { GoogleChatEvent } from '../types/Events.ts'
+import { generateRichChatElement, generateSelectionInput } from '../lib/ChatElements.ts'
 
 export const SlashCommands: Map<Commands, OnCommand> = new Map()
 
@@ -34,20 +35,40 @@ SlashCommands.set(SlashCommandCode.Who, {
 
       const consolidatedMembers = await consolidateMembers(spaceName, members)
 
-      console.log('consolidated', consolidatedMembers)
+      // console.log('consolidated', consolidatedMembers)
 
-      const [personOne, personTwo] = chooseTwoUsers(consolidatedMembers)
+      // const [personOne, personTwo] = chooseTwoUsers(consolidatedMembers)
 
       // update chosen members breakfasts
-      const updatedMembers = updateMembers(consolidatedMembers, personOne, personTwo)
+      // const updatedMembers = updateMembers(consolidatedMembers, personOne, personTwo)
 
-      console.log('updated', updatedMembers)
+      // console.log('updated', updatedMembers)
 
       // write members to KV
-      await writeMembers(spaceName, updatedMembers)
+      // await writeMembers(spaceName, updatedMembers)
 
-      // return message
-      return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
+      // return exclusion dialog
+      return generateRichChatElement('card', [
+        {
+          header: 'Exclude users',
+          collapsible: false,
+          widgets: [
+            {
+              textParagraph: {
+                text: 'Select the following users who WILL NOT be included in the selection.'
+              }
+            },
+            generateSelectionInput('members', 'CHECK_BOX', consolidatedMembers.map(m => {
+              return {
+                text: m.displayName,
+                value: m.name,
+                selected: false
+              }
+            }))
+          ]
+        }
+      ])
+      // return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
     } catch (error) {
       console.error('Error in whoIs:', error)
       throw error
@@ -58,7 +79,7 @@ SlashCommands.set(SlashCommandCode.Who, {
 /*
  * The /reset command
  *
- * this resets the breakfasts for all users in the chat,
+ * this prompty the reset breakfasts dialog,
  * you will be prompted with a are you sure and can only be
  * run by the chat group admin.
  *
@@ -66,144 +87,7 @@ SlashCommands.set(SlashCommandCode.Who, {
  */
 SlashCommands.set(SlashCommandCode.Reset, {
   execute: async (event: GoogleChatEvent) => {
-    const userName = event.user.name
-
     return {
-      actionResponse: {
-        type: 'DIALOG',
-        dialogAction: {
-          dialog: {
-            body: {
-            sections: [
-              {
-                header: 'Are you sure you want to reset all breakfasts?',
-                collapsible: false,
-                uncollapsibleWidgetsCount: 1,
-                widgets: [
-                  {
-                    textParagraph: {
-                      text:
-                        'By pressing the reset button you will revert all breakfasts to zero. This action is irreversible, are you sure you want to continue ?',
-                      maxLines: 2,
-                    },
-                  },
-                  {
-                    buttonList: {
-                      buttons: [
-                        {
-                          text: 'No thank you',
-                          type: 'OUTLINED',
-                          onClick: {
-                            action: {
-                              function: CardCommandCode.Cancel,
-                              parameters: [
-                                {
-                                  key: 'functionName',
-                                  value: CardCommandCode.Reset,
-                                },
-                              ],
-                            },
-                          },
-                        },
-                        {
-                          text: 'RESET!',
-                          icon: {
-                            materialIcon: {
-                              name: 'delete',
-                            },
-                          },
-                          color: {
-                            red: 1,
-                            green: 0,
-                            blue: 0,
-                            alpha: 1,
-                          },
-                          type: 'FILLED',
-                          onClick: {
-                            action: {
-                              function: CardCommandCode.Reset,
-                            },
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            ],
-            },
-          },
-        },
-      },
     }
-
-    // return {
-    //   privateMessageViewer: {
-    //     name: userName,
-    //   },
-    //   cardsV2: [
-    //     {
-    //       card: {
-    //         sections: [
-    //           {
-    //             header: 'Are you sure you want to reset all breakfasts?',
-    //             collapsible: false,
-    //             uncollapsibleWidgetsCount: 1,
-    //             widgets: [
-    //               {
-    //                 textParagraph: {
-    //                   text:
-    //                     'By pressing the reset button you will revert all breakfasts to zero. This action is irreversible, are you sure you want to continue ?',
-    //                   maxLines: 2,
-    //                 },
-    //               },
-    //               {
-    //                 buttonList: {
-    //                   buttons: [
-    //                     {
-    //                       text: 'No thank you',
-    //                       type: 'OUTLINED',
-    //                       onClick: {
-    //                         action: {
-    //                           function: CardCommandCode.Cancel,
-    //                           parameters: [
-    //                             {
-    //                               key: 'functionName',
-    //                               value: CardCommandCode.Reset,
-    //                             },
-    //                           ],
-    //                         },
-    //                       },
-    //                     },
-    //                     {
-    //                       text: 'RESET!',
-    //                       icon: {
-    //                         materialIcon: {
-    //                           name: 'delete',
-    //                         },
-    //                       },
-    //                       color: {
-    //                         red: 1,
-    //                         green: 0,
-    //                         blue: 0,
-    //                         alpha: 1,
-    //                       },
-    //                       type: 'FILLED',
-    //                       onClick: {
-    //                         action: {
-    //                           function: CardCommandCode.Reset,
-    //                         },
-    //                       },
-    //                     },
-    //                   ],
-    //                 },
-    //               },
-    //             ],
-    //           },
-    //         ],
-    //       },
-    //     },
-    //   ],
-    // }
   },
 })
