@@ -24,12 +24,12 @@ export function generateRichChatElement(elementType: 'card' | 'dialog', parts: {
   const type = elementType.toUpperCase()
   const typeKey = elementType === 'card' ? 'cardsV2' : 'dialog'
   const typeActionKey = `${elementType}Action`
+  const typeIdKey = `${elementType}Id`
 
   return {
     [typeKey]: [
       {
-        cardId: `${crypto.randomUUID()}-${elementType}`,
-        header: parts.header || {},
+        [typeIdKey]: `${crypto.randomUUID()}-${elementType}`,
         [elementType]: {
           sections: parts.sections,
         },
