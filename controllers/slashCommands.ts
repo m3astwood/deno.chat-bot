@@ -48,7 +48,7 @@ SlashCommands.set(SlashCommandCode.Who, {
       // await writeMembers(spaceName, updatedMembers)
 
       // return exclusion dialog
-      return generateRichChatElement('card', [
+      const returnValue = generateRichChatElement('card', [
         {
           header: 'Exclude users',
           collapsible: false,
@@ -68,6 +68,10 @@ SlashCommands.set(SlashCommandCode.Who, {
           ]
         }
       ])
+
+      console.log(returnValue)
+
+      return returnValue
       // return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
     } catch (error) {
       console.error('Error in whoIs:', error)
