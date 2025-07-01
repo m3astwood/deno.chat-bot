@@ -15,7 +15,7 @@ export function generateSelectionInput(name: string, type: 'CHECK_BOX' | 'RADIO_
 export function generateRichChatElement(elementType: 'card' | 'dialog', sections: any[]) {
   const type = elementType.toUpperCase()
   const typeKey = elementType === 'card' ? 'cardV2' : 'dialog'
-  const typeActionKey = `${type}Action`
+  const typeActionKey = `${elementType}Action`
 
   return {
     actionResponse: {
