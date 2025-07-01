@@ -20,26 +20,21 @@ interface CardDialogHeader {
   imageAltText?: string
 }
 
-export function generateRichChatElement(elementType: 'card' | 'dialog', parts: { header?: CardDialogHeader, sections: any[] }) {
+export function generateRichChatElement(elementType: 'card' | 'dialog', parts: { header?: CardDialogHeader; sections: any[] }) {
   const type = elementType.toUpperCase()
   const typeKey = elementType === 'card' ? 'cardsV2' : 'dialog'
   const typeActionKey = `${elementType}Action`
 
   return {
-    actionResponse: {
-      type,
-      [typeActionKey]: {
-        [typeKey]: [
-          {
-            cardId: `${crypto.randomUUID()}-${elementType}`,
-            header: parts.header || {},
-            [elementType]: {
-              sections: parts.sections,
-            }
-          },
-        ]
+    [typeKey]: [
+      {
+        cardId: `${crypto.randomUUID()}-${elementType}`,
+        header: parts.header || {},
+        [elementType]: {
+          sections: parts.sections,
+        },
       },
-    },
+    ],
   }
 }
 
