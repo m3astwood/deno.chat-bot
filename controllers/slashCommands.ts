@@ -48,26 +48,34 @@ SlashCommands.set(SlashCommandCode.Who, {
       // await writeMembers(spaceName, updatedMembers)
 
       // return exclusion dialog
-      const returnValue = generateRichChatElement('card', [
-        {
-          header: 'Exclude users',
-          collapsible: false,
-          widgets: [
-            {
-              textParagraph: {
-                text: 'Select the following users who WILL NOT be included in the selection.'
-              }
-            },
-            generateSelectionInput('members', 'CHECK_BOX', consolidatedMembers.map(m => {
-              return {
-                text: m.displayName,
-                value: m.name,
-                selected: false
-              }
-            }))
-          ]
-        }
-      ])
+      const returnValue = generateRichChatElement('card', {
+        header: {
+          title: 'Exclude users'
+        },
+        sections: [
+          {
+            collapsible: false,
+            widgets: [
+              {
+                textParagraph: {
+                  text: 'Select the following users who WILL NOT be included in the selection.',
+                },
+              },
+              generateSelectionInput(
+                'members',
+                'CHECK_BOX',
+                consolidatedMembers.map((m) => {
+                  return {
+                    text: m.displayName,
+                    value: m.name,
+                    selected: false,
+                  }
+                }),
+              ),
+            ],
+          },
+        ],
+      })
 
       console.log(returnValue)
 
@@ -91,7 +99,6 @@ SlashCommands.set(SlashCommandCode.Who, {
  */
 SlashCommands.set(SlashCommandCode.Reset, {
   execute: async (event: GoogleChatEvent) => {
-    return {
-    }
+    return {}
   },
 })

@@ -12,20 +12,32 @@ export function generateSelectionInput(name: string, type: 'CHECK_BOX' | 'RADIO_
   }
 }
 
-export function generateRichChatElement(elementType: 'card' | 'dialog', sections: any[]) {
+interface CardDialogHeader {
+  title: string
+  subtitle?: string
+  imageUrl?: string
+  imageType?: 'CIRCLE' | 'SQUARE'
+  imageAltText?: string
+}
+
+export function generateRichChatElement(elementType: 'card' | 'dialog', parts: { header?: CardDialogHeader, sections: any[] }) {
   const type = elementType.toUpperCase()
-  const typeKey = elementType === 'card' ? 'cardV2' : 'dialog'
+  const typeKey = elementType === 'card' ? 'cardsV2' : 'dialog'
   const typeActionKey = `${elementType}Action`
 
   return {
     actionResponse: {
-      type: 'DIALOG',
+      type,
       [typeActionKey]: {
-        [typeKey]: {
-          body: {
-            sections,
+        [typeKey]: [
+          {
+            cardId: `${crypto.randomUUID()}-${elementType}`,
+            header: parts.header || {},
+            [elementType]: {
+              sections: parts.sections,
+            }
           },
-        },
+        ]
       },
     },
   }
