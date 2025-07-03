@@ -11,34 +11,39 @@ CardCommands.set(CardCommandCode.Reset, {
 
 CardCommands.set(CardCommandCode.Choose, {
   execute: async (event) => {
-    console.log(event.common.formInputs)
+    try {
+      // console.log(event.common.formInputs)
+      const { members: {stringInputs: { value: toExclude } } } = event.common.formInputs
 
-    // {
-    //   members: {
-    //     stringInputs: {
-    //       value: [ "users/114134330763224107043", "users/103965345231025561001" ]
-    //     }
-    //   }
-    // }
-    const spaceName = event.space.name
-    console.log('Getting members for space:', spaceName)
-    const members = await getMembers(spaceName)
+      // {
+      //   members: {
+      //     stringInputs: {
+      //       value: [ "users/114134330763224107043", "users/103965345231025561001" ]
+      //     }
+      //   }
+      // }
+      const spaceName = event.space.name
+      console.log('Getting members for space:', spaceName)
+      const members = await getMembers(spaceName)
 
-    const consolidatedMembers = await consolidateMembers(spaceName, members)
+      const consolidatedMembers = await consolidateMembers(spaceName, members)
 
-    console.log('consolidated', consolidatedMembers)
+      console.log('consolidated', consolidatedMembers)
 
-    const [personOne, personTwo] = chooseTwoUsers(consolidatedMembers)
+      const [personOne, personTwo] = chooseTwoUsers(consolidatedMembers, toExclude)
 
-    // update chosen members breakfasts
-    const updatedMembers = updateMembers(consolidatedMembers, personOne, personTwo)
+      // update chosen members breakfasts
+      const updatedMembers = updateMembers(consolidatedMembers, personOne, personTwo)
 
-    console.log('updated', updatedMembers)
+      console.log('updated', updatedMembers)
 
-    // write members to KV
-    await writeMembers(spaceName, updatedMembers)
+      // write members to KV
+      await writeMembers(spaceName, updatedMembers)
 
-    // return message
-    return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
+      // return message
+      return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
+    } catch (error) {
+      return { text: error }
+    }
   },
 })
