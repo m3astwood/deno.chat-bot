@@ -7,9 +7,9 @@ CardCommands.set(CardCommandCode.Reset, {
 })
 
 CardCommands.set(CardCommandCode.Choose, {
-  execute: async (users) => {
-    console.log(users)
+  execute: async (event, parameters?) => {
+    console.log(event)
 
-    return users
+    return event
   },
 })

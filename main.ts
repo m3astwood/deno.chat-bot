@@ -27,7 +27,7 @@ app.post('/events', async (c) => {
     } else if (event.type === EventType.CardClicked) {
       const { invokedFunction, parameters } = event.common
 
-      console.log(event.common)
+      console.log(event)
       if (invokedFunction) {
         const cmd = CardCommands.get(invokedFunction)
         returnObject = await cmd?.execute(event, parameters)
