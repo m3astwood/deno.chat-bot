@@ -1,7 +1,7 @@
 import { writeMembers } from '../lib/Members.ts'
 import { getMembers } from '../lib/api.ts'
 import { CardCommandCode, OnCommand, SlashCommandCode } from '../types/Commands.ts'
-import { chooseTwoUsers } from '../lib/Chooser.ts'
+import { chooseTwoMembers } from '../lib/Chooser.ts'
 import { consolidateMembers, updateMembers } from '../lib/Members.ts'
 import { GoogleChatEvent } from '../types/Events.ts'
 import { generateRichChatElement, generateSelectionInput } from '../lib/ChatElements.ts'
@@ -38,7 +38,7 @@ SlashCommands.set(SlashCommandCode.Who, {
       // return exclusion dialog
       const returnValue = generateRichChatElement('card', {
         header: {
-          title: 'Exclude users'
+          title: 'Exclude users',
         },
         sections: [
           {
@@ -67,30 +67,23 @@ SlashCommands.set(SlashCommandCode.Who, {
                       text: 'Choose',
                       onClick: {
                         action: {
-                          function: CardCommandCode.Choose
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
+                          function: CardCommandCode.Choose,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
             ],
           },
         ],
       })
 
-      console.log({
-        privateMessageViewer: {
-          name: event.user.name
-        },
-        ...returnValue
-      })
-
       return {
         privateMessageViewer: {
-          name: event.user.name
+          name: event.user.name,
         },
-        ...returnValue
+        ...returnValue,
       }
     } catch (error) {
       console.error('Error in whoIs:', error)
@@ -110,6 +103,56 @@ SlashCommands.set(SlashCommandCode.Who, {
  */
 SlashCommands.set(SlashCommandCode.Reset, {
   execute: async (event: GoogleChatEvent) => {
-    return {}
+    // return exclusion dialog
+    const returnValue = generateRichChatElement('card', {
+      header: {
+        title: 'Exclude users',
+      },
+      sections: [
+        {
+          collapsible: false,
+          widgets: [
+            {
+              textParagraph: {
+                text: 'By clicking reset you will set the breakfast count for all members in this channel to zero.',
+              },
+            },
+            {
+              buttonList: {
+                buttons: [
+                  {
+                    text: 'Cancel',
+                    onClick: {
+                      action: {
+                        function: CardCommandCode.Cancel,
+                        parameters: [{
+                          key: 'cardCommand',
+                          value: CardCommandCode.Reset,
+                        }],
+                      },
+                    },
+                  },
+                  {
+                    text: 'Reset',
+                    onClick: {
+                      action: {
+                        function: CardCommandCode.Reset,
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    })
+
+    return {
+      privateMessageViewer: {
+        name: event.user.name,
+      },
+      ...returnValue,
+    }
   },
 })

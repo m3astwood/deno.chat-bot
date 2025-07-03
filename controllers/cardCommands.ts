@@ -1,5 +1,5 @@
 import { getMembers } from '../lib/api.ts'
-import { chooseTwoUsers } from '../lib/Chooser.ts'
+import { chooseTwoMembers } from '../lib/Chooser.ts'
 import { consolidateMembers, updateMembers, writeMembers } from '../lib/Members.ts'
 import { CardCommandCode, OnCommand } from '../types/Commands.ts'
 
@@ -12,7 +12,6 @@ CardCommands.set(CardCommandCode.Reset, {
 CardCommands.set(CardCommandCode.Choose, {
   execute: async (event) => {
     try {
-      // console.log(event.common.formInputs)
       const { members: {stringInputs: { value: toExclude } } } = event.common.formInputs
 
       // {
@@ -27,11 +26,23 @@ CardCommands.set(CardCommandCode.Choose, {
       const members = await getMembers(spaceName)
 
       const consolidatedMembers = await consolidateMembers(spaceName, members)
-
       console.log('consolidated', consolidatedMembers)
 
-      const [personOne, personTwo] = chooseTwoUsers(consolidatedMembers, toExclude)
+      const { chosen, error } = chooseTwoMembers(consolidatedMembers, toExclude)
+      if (error) {
+        return {
+          privateMessageViewer: {
+            name: event.user.name
+          },
+          text: error
+        }
+      }
 
+      if (!chosen) {
+        throw Error('Something has gone wrong with breakfast selection')
+      }
+
+      const [ personOne, personTwo ] = chosen
       // update chosen members breakfasts
       const updatedMembers = updateMembers(consolidatedMembers, personOne, personTwo)
 
@@ -42,8 +53,6 @@ CardCommands.set(CardCommandCode.Choose, {
 
       // return message
       return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
-    } catch (error) {
-      return { text: error }
     }
   },
 })
