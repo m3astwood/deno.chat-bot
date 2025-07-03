@@ -139,6 +139,18 @@ SlashCommands.set(SlashCommandCode.Reset, {
                         function: CardCommandCode.Reset,
                       },
                     },
+                    icon: {
+                      materialIcon: {
+                        name: 'delete',
+                      },
+                    },
+                    color: {
+                      red: 1,
+                      green: 0,
+                      blue: 0,
+                      alpha: 1,
+                    },
+                    type: 'FILLED',
                   },
                 ],
               },
