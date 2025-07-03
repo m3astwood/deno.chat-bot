@@ -49,6 +49,11 @@ SlashCommands.set(SlashCommandCode.Who, {
 
       // return exclusion dialog
       const returnValue = generateRichChatElement('card', {
+        privateMessageViewer: {
+          user: {
+            name: event.user.name
+          },
+        },
         header: {
           title: 'Exclude users'
         },
@@ -72,6 +77,20 @@ SlashCommands.set(SlashCommandCode.Who, {
                   }
                 }),
               ),
+              {
+                buttonList: {
+                  buttons: [
+                    {
+                      text: 'Choose',
+                      onClick: {
+                        action: {
+                          function: CardCommandCode.Choose
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
             ],
           },
         ],

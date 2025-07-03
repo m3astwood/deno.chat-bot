@@ -1,3 +1,5 @@
+import { CardDialogHeader } from '../types/ChatElements.ts'
+
 export function generateSelectionInput(name: string, type: 'CHECK_BOX' | 'RADIO_BUTTON' | 'SWITCH', items: any[]) {
   if (!name || !type || items.length === 0) {
     throw new Error('Missing name, type or items for selectionInput')
@@ -12,15 +14,7 @@ export function generateSelectionInput(name: string, type: 'CHECK_BOX' | 'RADIO_
   }
 }
 
-interface CardDialogHeader {
-  title: string
-  subtitle?: string
-  imageUrl?: string
-  imageType?: 'CIRCLE' | 'SQUARE'
-  imageAltText?: string
-}
-
-export function generateRichChatElement(elementType: 'card' | 'dialog', parts: { header?: CardDialogHeader; sections: any[] }) {
+export function generateRichChatElement(elementType: 'card' | 'dialog', parts: { header?: CardDialogHeader; sections: any[]; [key: string]: any }) {
   const type = elementType.toUpperCase()
   const typeKey = elementType === 'card' ? 'cardsV2' : 'dialog'
   const typeActionKey = `${elementType}Action`

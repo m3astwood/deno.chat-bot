@@ -7,10 +7,10 @@ export enum SlashCommandCode {
 
 export enum CardCommandCode {
   Cancel = 'cancelInteraction',
-  Reset = 'resetBreakfasts'
+  Reset = 'resetBreakfasts',
+  Choose = 'chooseMembers',
 }
 
 export interface OnCommand {
   execute: (...args: any) => Promise<any>
 }
-
