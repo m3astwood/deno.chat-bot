@@ -1,24 +1,26 @@
+import type { protos } from 'npm:@google-apps/chat'
+
 export enum EventType {
   AddedToSpace = 'ADDED_TO_SPACE',
   Message = 'MESSAGE',
   RemovedFromSpace = 'REMOVED_FROM_SPACE',
   CardClicked = 'CARD_CLICKED',
   Action = 'ACTION',
-  AppCommand = 'APP_COMMAND'
+  AppCommand = 'APP_COMMAND',
 }
 
 export enum DialogEventType {
-  RequestDialog = 'REQUEST_DIALOG'
+  RequestDialog = 'REQUEST_DIALOG',
 }
 
 export enum SpaceType {
   Room = 'SPACE',
-  DM = 'DM'
+  DM = 'DM',
 }
 
 export enum UserType {
   Human = 'HUMAN',
-  Bot = 'BOT'
+  Bot = 'BOT',
 }
 
 export interface GoogleChatEvent {
@@ -39,6 +41,7 @@ export interface GoogleChatEvent {
   }
   isDialogEvent?: boolean
   dialogEventType?: DialogEventType
+  action?: unknown
 }
 
 interface CommonEventData {
@@ -51,7 +54,6 @@ interface CommonEventData {
   parameters?: any
   invokedFunction?: string
 }
-
 
 interface Space {
   lastActiveTime: string
