@@ -96,9 +96,19 @@ SlashCommands.set(SlashCommandCode.Who, {
         ],
       })
 
-      console.log(returnValue)
+      console.log({
+        privateMessageViewer: {
+          name: event.user.name
+        },
+        ...returnValue
+      })
 
-      return returnValue
+      return {
+        privateMessageViewer: {
+          name: event.user.name
+        },
+        ...returnValue
+      }
       // return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
     } catch (error) {
       console.error('Error in whoIs:', error)
