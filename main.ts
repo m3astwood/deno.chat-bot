@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { EventType, GoogleChatEvent } from './types/Events.ts'
+import { EventType, GoogleChatCard, GoogleChatEvent } from './types/Events.ts'
 import { SlashCommands } from './controllers/slashCommands.ts'
 import { CardCommands } from './controllers/cardCommands.ts'
 
@@ -25,9 +25,9 @@ app.post('/events', async (c) => {
         returnObject = await cmd?.execute(event)
       }
     } else if (event.type === EventType.CardClicked) {
-      const { invokedFunction, parameters } = event.common
+      const { invokedFunction, parameters } = (event as GoogleChatCard).common
 
-      console.log(event)
+      console.log(event.action)
       if (invokedFunction) {
         const cmd = CardCommands.get(invokedFunction)
         returnObject = await cmd?.execute(event, parameters)
