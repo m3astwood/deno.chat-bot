@@ -7,8 +7,8 @@ CardCommands.set(CardCommandCode.Reset, {
 })
 
 CardCommands.set(CardCommandCode.Choose, {
-  execute: async (event, parameters?) => {
-    console.log(event)
+  execute: async (event) => {
+    console.log(event.common.formInputs)
 
     return event
   },

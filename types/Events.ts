@@ -53,6 +53,7 @@ interface CommonEventData {
   }
   parameters?: any
   invokedFunction?: string
+  formInputs: any
 }
 
 interface Space {
