@@ -35,25 +35,8 @@ SlashCommands.set(SlashCommandCode.Who, {
 
       const consolidatedMembers = await consolidateMembers(spaceName, members)
 
-      // console.log('consolidated', consolidatedMembers)
-
-      // const [personOne, personTwo] = chooseTwoUsers(consolidatedMembers)
-
-      // update chosen members breakfasts
-      // const updatedMembers = updateMembers(consolidatedMembers, personOne, personTwo)
-
-      // console.log('updated', updatedMembers)
-
-      // write members to KV
-      // await writeMembers(spaceName, updatedMembers)
-
       // return exclusion dialog
       const returnValue = generateRichChatElement('card', {
-        privateMessageViewer: {
-          user: {
-            name: event.user.name
-          },
-        },
         header: {
           title: 'Exclude users'
         },
@@ -109,7 +92,6 @@ SlashCommands.set(SlashCommandCode.Who, {
         },
         ...returnValue
       }
-      // return { text: `Bonjour, semaine prochaine le petit dej est fourni par : <${personOne.name}> et <${personTwo.name}>!` }
     } catch (error) {
       console.error('Error in whoIs:', error)
       throw error

@@ -38,14 +38,20 @@ const chooseOneWeighted = (users: SavedMember[]): SavedMember | null => {
  * @throws {Error} If the input array has fewer than two users.
  * @returns {[User, User]} A tuple containing the two chosen users.
  */
-export const chooseTwoUsers = (users: SavedMember[]): [SavedMember, SavedMember] => {
+export const chooseTwoUsers = (users: SavedMember[], exclude: string[] = []): [SavedMember, SavedMember] => {
   if (users.length < 2) {
     throw new Error('The user array must contain at least two users.')
   }
 
-  const firstUser = chooseOneWeighted(users)
+  const filteredMembers = users.filter(u => !exclude.includes(u.name))
 
-  const remainingUsers = users.filter((user) => user.name !== firstUser!.name)
+  if (filteredMembers.length < 2) {
+    throw new Error('The filteredUsers array must contain at least two users.')
+  }
+
+  const firstUser = chooseOneWeighted(filteredMembers)
+
+  const remainingUsers = filteredMembers.filter((user) => user.name !== firstUser!.name)
 
   const secondUser = chooseOneWeighted(remainingUsers)
 
