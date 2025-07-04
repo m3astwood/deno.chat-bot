@@ -17,20 +17,17 @@ CardCommands.set(CardCommandCode.Reset, {
     console.log(event.common)
     console.log(event.message)
 
-    const { success, error } = updateMessage({
-      name: event.message.name,
-      updateMask: [
-        'cardssV2'
-      ],
+    return {
+      text: 'Successfully reset all breakfasts for members of this group',
       cardsV2: [],
-      text: 'Reset successful.'
-    })
-
-    if (error) {
-      throw Error('SOMETHING WENT WRONG IN MESSAGE UPDATE')
+      actionResponse: {
+        type: 'UPDATE_MESSAGE',
+      },
+      updateMask: [ 'cardsV2' ],
+      thread: {
+        name: event.thread.name,
+      },
     }
-
-    return { ...success }
   },
 })
 
