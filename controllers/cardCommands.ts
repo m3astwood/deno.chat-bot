@@ -14,8 +14,27 @@ CardCommands.set(CardCommandCode.Cancel, {
 
 CardCommands.set(CardCommandCode.Reset, {
   execute: async (event: GoogleChatEvent, params) => {
-    console.log(event)
-    return { actionReponse: { type: 'UPDATE_MESSAGE' }, text: 'All breakfasts for members of this chat have been reset', cardsV2: [] }
+    console.log(event.common)
+    console.log(event.message)
+    return {
+      actionResponse: { type: "UPDATE_MESSAGE" },
+      privateMessageViewer: event.user,
+  cardsV2: [
+        {
+          sections: [
+            {
+              collapsible: false,
+              widgets: [
+                {
+                  textParagraph: {
+                    text: 'Members\' breakfasts have been reset to zero'
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ] }
   },
 })
 
