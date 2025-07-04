@@ -35,3 +35,18 @@ export const getMembers = async (spaceName: string): Promise<SpaceMember[]> => {
     throw error
   }
 }
+
+export const updateMessage = async (messageBody) => {
+  try {
+    const response = await api(messageBody.name, {
+      method: 'PATCH',
+      body: messageBody
+    })
+
+    console.log('updateMessage', response)
+
+    return response
+  } catch (error) {
+    console.log(error)
+  }
+}

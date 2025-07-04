@@ -1,4 +1,4 @@
-import { getMembers } from '../lib/api.ts'
+import { getMembers, updateMessage } from '../lib/api.ts'
 import { chooseTwoMembers } from '../lib/Chooser.ts'
 import { consolidateMembers, updateMembers, writeMembers } from '../lib/Members.ts'
 import { CardCommandCode, OnCommand } from '../types/Commands.ts'
@@ -16,25 +16,21 @@ CardCommands.set(CardCommandCode.Reset, {
   execute: async (event: GoogleChatEvent, params) => {
     console.log(event.common)
     console.log(event.message)
-    return {
-      actionResponse: { type: "UPDATE_MESSAGE" },
-      privateMessageViewer: event.user,
-  cardsV2: [
-        {
-          sections: [
-            {
-              collapsible: false,
-              widgets: [
-                {
-                  textParagraph: {
-                    text: 'Members\' breakfasts have been reset to zero'
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ] }
+
+    const { success, error } = updateMessage({
+      name: event.message.name,
+      updateMask: [
+        'cardssV2'
+      ],
+      cardsV2: [],
+      text: 'Reset successful.'
+    })
+
+    if (error) {
+      throw Error('SOMETHING WENT WRONG IN MESSAGE UPDATE')
+    }
+
+    return { ...success }
   },
 })
 
