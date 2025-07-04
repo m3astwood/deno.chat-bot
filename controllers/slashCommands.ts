@@ -105,6 +105,7 @@ SlashCommands.set(SlashCommandCode.Reset, {
   execute: async (event: GoogleChatEvent) => {
     // return exclusion dialog
     const returnValue = generateRichChatElement('card', {
+      id: 'ResetCardPrompt',
       header: {
         title: 'Exclude users',
       },

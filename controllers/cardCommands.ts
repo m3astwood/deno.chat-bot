@@ -2,6 +2,7 @@ import { getMembers } from '../lib/api.ts'
 import { chooseTwoMembers } from '../lib/Chooser.ts'
 import { consolidateMembers, updateMembers, writeMembers } from '../lib/Members.ts'
 import { CardCommandCode, OnCommand } from '../types/Commands.ts'
+import { GoogleChatEvent } from '../types/Events.ts'
 
 export const CardCommands: Map<string, OnCommand> = new Map()
 
@@ -12,8 +13,9 @@ CardCommands.set(CardCommandCode.Cancel, {
 })
 
 CardCommands.set(CardCommandCode.Reset, {
-  execute: async (event, params) => {
-    return { text: 'RESET!!!!' }
+  execute: async (event: GoogleChatEvent, params) => {
+    console.log(event)
+    return { actionReponse: { type: 'UPDATE_MESSAGE' }, text: 'All breakfasts for members of this chat have been reset', cardsV2: [] }
   },
 })
 
