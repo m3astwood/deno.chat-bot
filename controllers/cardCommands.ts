@@ -18,6 +18,7 @@ CardCommands.set(CardCommandCode.Reset, {
     console.log(event.message)
 
     return {
+      name: event.message.name,
       text: 'Successfully reset all breakfasts for members of this group',
       cardsV2: [],
       actionResponse: {
