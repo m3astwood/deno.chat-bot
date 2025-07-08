@@ -29,7 +29,9 @@ CardCommands.set(CardCommandCode.Reset, {
       },
     }
 
-    chatClient.updateMessage({ message })
+    await chatClient.updateMessage({ message })
+
+    return { text: 'Reset done...' }
   },
 })
 
