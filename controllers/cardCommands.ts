@@ -16,22 +16,28 @@ CardCommands.set(CardCommandCode.Cancel, {
 
 CardCommands.set(CardCommandCode.Reset, {
   execute: async (event: GoogleChatEvent, params) => {
-    console.log(event.common)
-    console.log(event.message)
+    try {
+      // console.log(event.common)
+      // console.log(event.message)
 
-    const message =  {
-      name: event.message.name,
-      text: 'Successfully reset all breakfasts for members of this group',
-      cardsV2: [],
-      updateMask: [ 'cardsV2' ],
-      thread: {
-        name: event.thread.name,
-      },
+      const message =  {
+        name: event.message.name,
+        text: 'Successfully reset all breakfasts for members of this group',
+        cardsV2: [],
+        updateMask: [ 'cardsV2' ],
+        thread: {
+          name: event.thread.name,
+        },
+      }
+
+      await chatClient.updateMessage({ message })
+
+      return { text: 'Reset done...' }
+    } catch (error) {
+
+      console.error(error)
+      return { text: 'There was an error in the reset command' }
     }
-
-    await chatClient.updateMessage({ message })
-
-    return { text: 'Reset done...' }
   },
 })
 
