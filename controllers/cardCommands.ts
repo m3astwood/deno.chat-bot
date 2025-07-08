@@ -4,6 +4,8 @@ import { consolidateMembers, updateMembers, writeMembers } from '../lib/Members.
 import { CardCommandCode, OnCommand } from '../types/Commands.ts'
 import { GoogleChatEvent } from '../types/Events.ts'
 
+import { chatClient } from '../lib/auth.ts'
+
 export const CardCommands: Map<string, OnCommand> = new Map()
 
 CardCommands.set(CardCommandCode.Cancel, {
@@ -17,18 +19,17 @@ CardCommands.set(CardCommandCode.Reset, {
     console.log(event.common)
     console.log(event.message)
 
-    return {
+    const message =  {
       name: event.message.name,
       text: 'Successfully reset all breakfasts for members of this group',
       cardsV2: [],
-      actionResponse: {
-        type: 'UPDATE_MESSAGE',
-      },
       updateMask: [ 'cardsV2' ],
       thread: {
         name: event.thread.name,
       },
     }
+
+    chatClient.updateMessage({ message })
   },
 })
 

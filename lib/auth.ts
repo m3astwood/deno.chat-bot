@@ -1,5 +1,6 @@
 import { env } from './env.ts'
 import { GoogleAuth } from 'google-auth-library'
+import { ChatServiceClient } from 'google-apps/chat'
 
 const SCOPES = env.SCOPES
 const SERVICE_ACCOUNT = env.SERVICE_ACCOUNT
@@ -25,5 +26,24 @@ async function authorizeServiceAccount(): Promise<{ client: GoogleAuth, token: s
     throw err
   }
 }
+
+function authorizeChatAccount() {
+  try {
+    const client = new ChatServiceClient({
+      credentials: SERVICE_ACCOUNT,
+      scopes: SCOPES,
+    })
+
+    return client
+  } catch (err) {
+    console.error('Error authorizing service account:', err)
+    console.error(
+      "Please ensure your credentials env variable is a valid service account key.",
+    )
+    throw err
+  }
+}
+
+export const chatClient = authorizeChatAccount()
 
 export default await authorizeServiceAccount()
