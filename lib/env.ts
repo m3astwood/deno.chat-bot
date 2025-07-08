@@ -21,7 +21,7 @@ const Env = z.object({
     })),
   SCOPES: z.string()
     .transform((value) => value.split(','))
-    .pipe(z.string().trim().url().array()),
+    .pipe(z.string().trim().array()),
 })
 
 export const env = Env.parse(envObject)

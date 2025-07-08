@@ -29,6 +29,7 @@ async function authorizeServiceAccount(): Promise<{ client: GoogleAuth, token: s
 
 function authorizeChatAccount() {
   try {
+    console.log(SERVICE_ACCOUNT)
     const client = new ChatServiceClient({
       credentials: SERVICE_ACCOUNT,
       scopes: SCOPES,
